@@ -1,25 +1,25 @@
 module Hw1.Part2 where
 
--- Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð¿Ð¾ Ð·Ð°Ð´Ð°Ð½Ð½Ð¾Ð¼Ñƒ Ð¸Ð½Ð´ÐµÐºÑÑƒ Ð¸ Ð²ÐµÑ€Ð½ÑƒÑ‚ÑŒ ÑƒÐ´Ð°Ð»Ñ‘Ð½Ð½Ñ‹Ð¹ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚
+-- “¤ «¨âì í«¥¬¥­â ¯® § ¤ ­­®¬ã ¨­¤¥ªáã ¨ ¢¥à­ãâì ã¤ «ñ­­ë© í«¥¬¥­â
 removeAt :: Int -> [a] -> (Maybe a, [a])
 removeAt _ []   = (Nothing, [])
-removeAt n list@(x:xs) 
+removeAt n list@(x:xs)
          | n < 0     = (Nothing, list)
          | n == 0    = (Just x, xs)
-         | otherwise = (fst a, x : snd a) 
+         | otherwise = (fst a, x : snd a)
            where a = removeAt (n - 1) xs
 
--- Ð¢Ñ€ÐµÐ±ÑƒÐµÑ‚ÑÑ Ñ€ÐµÐ°Ð»Ð¸Ð·Ð¾Ð²Ð°Ñ‚ÑŒ ÑÐ¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²ÐºÑƒ ÑÐ»Ð¸ÑÐ½Ð¸ÐµÐ¼
+-- ’à¥¡ã¥âáï à¥ «¨§®¢ âì á®àâ¨à®¢ªã á«¨ï­¨¥¬
 mergeSort :: Ord a => [a] -> [a]
 mergeSort [] = []
 mergeSort [x] = [x]
-mergeSort l = let 
+mergeSort l = let
                   merge :: Ord t => [t] -> [t] -> [t]
                   merge a [] = a
                   merge [] b = b
-                  merge a@(x:xs) b@(y:ys) 
+                  merge a@(x:xs) b@(y:ys)
                         = if (x <= y)
                           then x:(merge xs b)
-                          else y:(merge a ys) 
-              in merge (mergeSort $ fst m) (mergeSort $ snd m) 
+                          else y:(merge a ys)
+              in merge (mergeSort $ fst m) (mergeSort $ snd m)
                  where m = splitAt (div (length l) 2) l

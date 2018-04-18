@@ -1,17 +1,17 @@
 module Hw1.Part3 where
 
--- import Data.List.NonEmpty ()
+import Data.List.NonEmpty (NonEmpty(..), toList, (<|))
 
 data Day = Mon | Tue | Wed | Thu | Fri | Sat | Sun deriving (Eq, Show, Enum, Bounded)
 
 nextDay :: Day -> Day
-nextDay day | day == maxBound = minBound 
-            | otherwise = succ day 
+nextDay day | day == maxBound = minBound
+            | otherwise = succ day
 
 
 afterDays :: Int -> Day -> Day
 afterDays n day | n `mod` 7 == 0 = day
-                | otherwise = afterDays (n - 1) (nextDay day) 
+                | otherwise = afterDays (n - 1) (nextDay day)
 
 isWeekend :: Day -> Bool
 isWeekend day = elem day [Sat, Sun]
@@ -25,27 +25,27 @@ daysToParty day = 1 + (daysToParty $ nextDay day)
 
 
 data City = City {
-    cityCastle :: Maybe Castle,
-    cityEducation   :: Maybe Education,
-    cityHouses :: [House]
-} deriving (Show)
+    cityCastle    :: Maybe Castle,
+    cityEducation :: Maybe Education,
+    cityHouses    :: NonEmpty House
+} deriving (Show, Eq)
 
 data Castle = Castle {
     castleWalls :: Maybe Walls,
     castleLord  :: Maybe Lord
-} deriving (Show)
+} deriving (Show, Eq)
 
 data Education = Church | Library
-            deriving (Show)
+            deriving (Show, Eq)
 
 data House = One | Two | Three | Four
-             deriving (Show, Enum)
+             deriving (Show, Enum, Eq)
 
-data Walls = Walls 
-             deriving (Show)
+data Walls = Walls
+             deriving (Show, Eq)
 
-data Lord = Lord 
-            deriving (Show)
+data Lord = Lord
+            deriving (Show, Eq)
 
 buildCastle :: City -> (Bool, City)
 buildCastle city@City {cityCastle = Nothing} = (True, city{cityCastle = castle})
@@ -54,8 +54,8 @@ buildCastle city = (False, city)
 
 
 buildEducation :: City -> Education -> (Bool, City)
-buildEducation city@City {cityEducation   = Nothing} education = (True, city {cityEducation = Just education})
-buildEducation city education = (False, city)
+buildEducation city@City {cityEducation = Nothing} education = (True, city {cityEducation = Just education})
+buildEducation city _ = (False, city)
 
 
 buildChurch :: City -> (Bool, City)
@@ -67,34 +67,34 @@ buildLibrary city = buildEducation city Library
 
 
 buildHouse :: City -> Int -> City
-buildHouse city@City {cityHouses = hs} members 
-           | elem members [1 .. 4] = city {cityHouses = (toEnum members) : hs}
+buildHouse city@City {cityHouses = hs} members
+           | elem members [1 .. 4] = city {cityHouses = (toEnum (members - 1)) <| hs}
            | otherwise = city
 
 castleHasLord :: Castle -> Bool
-castleHasLord castle@Castle {castleLord = Nothing} = False
-castleHasLord _                                    = True
+castleHasLord Castle {castleLord = Nothing} = False
+castleHasLord _                             = True
 
 castleHasWalls :: Castle -> Bool
-castleHasWalls castle@Castle {castleWalls = Nothing} = False
-castleHasWalls _                                     = True
+castleHasWalls Castle {castleWalls = Nothing} = False
+castleHasWalls _                              = True
 
 inviteLord :: City -> Lord -> City
 inviteLord city@City {cityCastle = (Just castle)} lord
            | castleHasLord castle = error "Another lord is living in the castle"
            | otherwise      = city {cityCastle = Just (castle {castleLord = Just lord})}
-inviteLord city@City {cityCastle = Nothing} lord = error "No castle for lord in city"
+inviteLord City {cityCastle = Nothing} _ = error "No castle for lord in city"
 
 cityPopulation :: City -> Int
-cityPopulation City {cityHouses = chouses} = sum $ map (+1) $ map fromEnum chouses
+cityPopulation City {cityHouses = houses} = sum $ map ((+1) . fromEnum) $ Data.List.NonEmpty.toList houses
 
 buildWalls :: City -> City
 buildWalls city@City {cityCastle = (Just castle)}
-           | not (castleHasLord castle)   = error "City doesn't has a lord"
+           | not (castleHasLord castle)   = error "City doesn't have a lord"
            | (cityPopulation city) < 10   = error "City is too small"
            | castleHasWalls castle        = error "There are walls in the city already"
            | otherwise = city {cityCastle = Just (castle {castleWalls = Just Walls})}
-buildWalls city@City {cityCastle = Nothing} = error "No castle in the city"
+buildWalls City {cityCastle = Nothing} = error "No castle in the city"
 
 
 
@@ -103,57 +103,57 @@ buildWalls city@City {cityCastle = Nothing} = error "No castle in the city"
 
 
 -- Natural numbers
-data Nat = Z | S Nat
+data Nat = Z | S Nat deriving Show
 
 instance Eq Nat where
-  -- Проверка натуральных чисел на равенство
-  (==) Z Z = True
+  -- �஢�ઠ ����ࠫ��� �ᥫ �� ࠢ���⢮
+  (==) Z Z         = True
   (==) (S a) (S b) = a == b
-  (==) _ _ = False
+  (==) _ _         = False
 
 instance Num Nat where
-  -- Сложение двух натуральных чисел
-  (+) x Z = x
-  (+) Z y = y
+  -- �������� ���� ����ࠫ��� �ᥫ
+  (+) x Z     = x
+  (+) Z y     = y
   (+) x (S y) = S (x + y)
 
-  -- Вычитание натуральных чисел
-  (-) x Z = x
-  (-) Z y = Z
+  -- ���⠭�� ����ࠫ��� �ᥫ
+  (-) x Z         = x
+  (-) Z _         = Z
   (-) (S x) (S y) = x - y
 
-  -- Умножение двух натуральных чисел
-  (*) x Z = Z
-  (*) Z y = Z
+  -- ��������� ���� ����ࠫ��� �ᥫ
+  (*) _ Z     = Z
+  (*) Z _     = Z
   (*) x (S y) = x + (x * y)
 
-  -- Модуль натурального числа
+  -- ����� ����ࠫ쭮�� �᫠
   abs = id
-  
-  -- Знак натурального числа
+
+  -- ���� ����ࠫ쭮�� �᫠
   signum Z = 0
   signum _ = 1
 
-  -- Превращение целых чисел в натуральные
+  -- �ॢ�饭�� 楫�� �ᥫ � ����ࠫ��
   fromInteger 0 = Z
   fromInteger x | x < 0     = error "Not a natural number"
                 | otherwise = S (fromInteger (x - 1))
 
 instance Ord Nat where
-  -- Сравнение натуральных чисел
-  (<=) (S x) Z = False
+  -- �ࠢ����� ����ࠫ��� �ᥫ
+  (<=) (S _) Z     = False
   (<=) (S x) (S y) = x <= y
-  (<=) _ _ = True
+  (<=) _ _         = True
 
 instance Integral Nat where
-  -- Целочисленное деление натуральных чисел и остаток от деления натурального числа на другое
+  -- �����᫥���� ������� ����ࠫ��� �ᥫ � ���⮪ �� ������� ����ࠫ쭮�� �᫠ �� ��㣮�
   quotRem _ Z = error "Division by zero"
-  quotRem x y = let division (div, rem) = if rem >= y then division (S div, rem - y) else (div, rem) in division (Z, x)
+  quotRem x y = let division (d, r) = if r >= y then division (S d, r - y) else (d, r) in division (Z, x)
 
-  -- Превращение натуральных чисел в целые
-  toInteger Z = 0
+  -- �ॢ�饭�� ����ࠫ��� �ᥫ � 楫�
+  toInteger Z     = 0
   toInteger (S x) = 1 + toInteger x
-  
+
 instance Real Nat where
   toRational x = toRational (toInteger x)
 
@@ -194,7 +194,7 @@ fromList = foldr insert Leaf
 
 toList :: Tree a -> [a]
 toList Leaf         = []
-toList (Node x l r) = toList l ++ x ++ toList r
+toList (Node x l r) = Hw1.Part3.toList l ++ x ++ Hw1.Part3.toList r
 
 remove :: (Ord a) => a -> Tree a -> Tree a
 remove _ (Node [] _ _) = error "Remove failed"
@@ -209,4 +209,4 @@ remove x (Node ns@(n:_) a b)
 findMin :: (Ord a) => Tree a -> [a]
 findMin Leaf                = error "FindMin failed"
 findMin (Node ns Leaf Leaf) = ns
-findMin (Node _ a _)     = findMin a
+findMin (Node _ a _)        = findMin a
