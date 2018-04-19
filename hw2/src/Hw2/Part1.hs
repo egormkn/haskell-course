@@ -11,7 +11,7 @@ data Expr = Const Int
           deriving (Show)
 
 data ArithmeticError = DivideByZero
-                     | NegativeExponent
+                     | NegativeExponent deriving Eq
 
 instance Show ArithmeticError where
   show DivideByZero     = "Division by zero"

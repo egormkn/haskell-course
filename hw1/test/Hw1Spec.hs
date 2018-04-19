@@ -1,8 +1,8 @@
 module Hw1Spec where
 
+import Data.List.NonEmpty (fromList)
 import Hw1
 import Test.Hspec
-import Data.List.NonEmpty (fromList)
 
 spec :: Spec
 spec = do
@@ -19,7 +19,7 @@ spec = do
     smartReplicate []        `shouldBe` []
 
   it "contains" $ do
-    contains 0 []                             `shouldBe` [] 
+    contains 0 []                             `shouldBe` []
     contains 3 [[1..3], [1, 2], [3, 4]]       `shouldBe` [[1, 2, 3], [3, 4]]
     contains 0 [[1, 2], [2], [0], [-1, 0, 1]] `shouldBe` [[0], [-1, 0, 1]]
 
@@ -27,18 +27,18 @@ spec = do
     stringSum "1 2 3"               `shouldBe` 6
     stringSum "1 -2"                `shouldBe` -1
     stringSum "1 2 3 4 -4 -3 -2 -1" `shouldBe` 0
-    
+
   it "removeAt" $ do
     removeAt 2 [0, 1, 2]   `shouldBe` (Just 2, [0, 1])
     removeAt 100 "abcd"    `shouldBe` (Nothing,"abcd")
     removeAt (-1) "abcd"   `shouldBe` (Nothing,"abcd")
     removeAt 1 "abc"       `shouldBe` (Just 'b', "ac")
-    
+
   it "mergeSort" $ do
     mergeSort [1, 0, 4, -2, 6]   `shouldBe` [-2, 0, 1, 4, 6]
     mergeSort [1, 2, 3]          `shouldBe` [1, 2, 3]
     mergeSort [9, 8, 7, 6, 5]    `shouldBe` [5, 6, 7, 8, 9]
-    
+
 
   it "Nat" $ do
     toInteger Z                     `shouldBe` 0
@@ -71,7 +71,7 @@ spec = do
     isWeekend Sun                   `shouldBe` True
     daysToParty Fri                 `shouldBe` 0
     daysToParty Mon                 `shouldBe` 4
-    
+
   it "City" $ do
     cityPopulation (buildHouse (City Nothing Nothing (Data.List.NonEmpty.fromList [One, Two, Two])) 3) `shouldBe` 8
     buildHouse (buildHouse (City Nothing Nothing (Data.List.NonEmpty.fromList [One, Two, Two])) 3) 4 `shouldBe` (City Nothing Nothing (Data.List.NonEmpty.fromList [Four,Three,One,Two,Two]))
@@ -80,7 +80,7 @@ spec = do
 
   it "Tree" $ do
     find 5  (Hw1.fromList [3, 1, 4, 1, 4, 5])         `shouldBe` Just 5
-    find 4  (Hw1.fromList [3, 1, 4, 1, 4, 5])         `shouldBe` Just 4 
+    find 4  (Hw1.fromList [3, 1, 4, 1, 4, 5])         `shouldBe` Just 4
     (toList . Hw1.fromList) [3, 12, 39, 1]            `shouldBe` [1, 3, 12, 39]
     (toList . Hw1.fromList) [3, 12, 42, 1]            `shouldBe` [1, 3, 12, 42]
     (toList . insert 7 . Hw1.fromList) [3, 12, 42, 1] `shouldBe` [1, 3, 7, 12, 42]
