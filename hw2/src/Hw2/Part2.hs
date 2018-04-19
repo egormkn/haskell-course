@@ -75,12 +75,12 @@ instance Monad NonEmpty where
   return :: a -> NonEmpty a
   return a = undefined
 
-instance Monad NonEmpty where
+{-instance Monad NonEmpty where
   ~(a :| as) >>= f = b :| (bs ++ bs')
     where b :| bs = f a
           bs' = as >>= toList . f
           toList ~(c :| cs) = c : cs
-
+-}
 {-
 instance Functor [] where
     fmap = map
