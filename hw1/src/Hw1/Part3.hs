@@ -1,6 +1,6 @@
 module Hw1.Part3 where
 
-import Data.List.NonEmpty (NonEmpty(..), toList, (<|))
+import Data.List.NonEmpty (NonEmpty (..), toList, (<|))
 
 data Day = Mon | Tue | Wed | Thu | Fri | Sat | Sun deriving (Eq, Show, Enum, Bounded)
 
@@ -14,12 +14,12 @@ afterDays n day | n `mod` 7 == 0 = day
                 | otherwise = afterDays (n - 1) (nextDay day)
 
 isWeekend :: Day -> Bool
-isWeekend day = elem day [Sat, Sun]
+isWeekend day = day `elem` [Sat, Sun]
 
 
 daysToParty :: Day -> Int
 daysToParty Fri = 0
-daysToParty day = 1 + (daysToParty $ nextDay day)
+daysToParty day = 1 + daysToParty (nextDay day)
 
 
 
@@ -68,7 +68,7 @@ buildLibrary city = buildEducation city Library
 
 buildHouse :: City -> Int -> City
 buildHouse city@City {cityHouses = hs} members
-           | elem members [1 .. 4] = city {cityHouses = (toEnum (members - 1)) <| hs}
+           | members `elem` [1 .. 4] = city {cityHouses = toEnum (members - 1) <| hs}
            | otherwise = city
 
 castleHasLord :: Castle -> Bool
@@ -91,7 +91,7 @@ cityPopulation City {cityHouses = houses} = sum $ map ((+1) . fromEnum) $ Data.L
 buildWalls :: City -> City
 buildWalls city@City {cityCastle = (Just castle)}
            | not (castleHasLord castle)   = error "City doesn't have a lord"
-           | (cityPopulation city) < 10   = error "City is too small"
+           | cityPopulation city < 10   = error "City is too small"
            | castleHasWalls castle        = error "There are walls in the city already"
            | otherwise = city {cityCastle = Just (castle {castleWalls = Just Walls})}
 buildWalls City {cityCastle = Nothing} = error "No castle in the city"
@@ -106,51 +106,51 @@ buildWalls City {cityCastle = Nothing} = error "No castle in the city"
 data Nat = Z | S Nat deriving Show
 
 instance Eq Nat where
-  -- à®¢¥àª  ­ âãà «ì­ëå ç¨á¥« ­  à ¢¥­áâ¢®
+  -- ï¿½à®¢ï¿½àª  ï¿½ï¿½ï¿½ï¿½à «ï¿½ï¿½ï¿½ ï¿½á¥« ï¿½ï¿½ à ¢ï¿½ï¿½ï¿½â¢®
   (==) Z Z         = True
   (==) (S a) (S b) = a == b
   (==) _ _         = False
 
 instance Num Nat where
-  -- ‘«®¦¥­¨¥ ¤¢ãå ­ âãà «ì­ëå ç¨á¥«
+  -- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ï¿½ï¿½ï¿½ ï¿½á¥«
   (+) x Z     = x
   (+) Z y     = y
   (+) x (S y) = S (x + y)
 
-  -- ‚ëç¨â ­¨¥ ­ âãà «ì­ëå ç¨á¥«
+  -- ï¿½ï¿½ï¿½â ­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ï¿½ï¿½ï¿½ ï¿½á¥«
   (-) x Z         = x
   (-) Z _         = Z
   (-) (S x) (S y) = x - y
 
-  -- “¬­®¦¥­¨¥ ¤¢ãå ­ âãà «ì­ëå ç¨á¥«
+  -- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ï¿½ï¿½ï¿½ ï¿½á¥«
   (*) _ Z     = Z
   (*) Z _     = Z
   (*) x (S y) = x + (x * y)
 
-  -- Œ®¤ã«ì ­ âãà «ì­®£® ç¨á« 
+  -- ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ì­®ï¿½ï¿½ ï¿½á« 
   abs = id
 
-  -- ‡­ ª ­ âãà «ì­®£® ç¨á« 
+  -- ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ì­®ï¿½ï¿½ ï¿½á« 
   signum Z = 0
   signum _ = 1
 
-  -- à¥¢à é¥­¨¥ æ¥«ëå ç¨á¥« ¢ ­ âãà «ì­ë¥
+  -- ï¿½à¥¢ï¿½é¥­ï¿½ï¿½ æ¥«ï¿½ï¿½ ï¿½á¥« ï¿½ ï¿½ï¿½ï¿½ï¿½à «ï¿½ï¿½
   fromInteger 0 = Z
   fromInteger x | x < 0     = error "Not a natural number"
                 | otherwise = S (fromInteger (x - 1))
 
 instance Ord Nat where
-  -- ‘à ¢­¥­¨¥ ­ âãà «ì­ëå ç¨á¥«
+  -- ï¿½à ¢ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ï¿½ï¿½ï¿½ ï¿½á¥«
   (<=) (S _) Z     = False
   (<=) (S x) (S y) = x <= y
   (<=) _ _         = True
 
 instance Integral Nat where
-  -- –¥«®ç¨á«¥­­®¥ ¤¥«¥­¨¥ ­ âãà «ì­ëå ç¨á¥« ¨ ®áâ â®ª ®â ¤¥«¥­¨ï ­ âãà «ì­®£® ç¨á«  ­  ¤àã£®¥
+  -- ï¿½ï¿½ï¿½ï¿½ï¿½á«¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ï¿½ï¿½ï¿½ ï¿½á¥« ï¿½ ï¿½ï¿½ï¿½â®ª ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ì­®ï¿½ï¿½ ï¿½á«  ï¿½ï¿½ ï¿½ï¿½ã£®ï¿½
   quotRem _ Z = error "Division by zero"
   quotRem x y = let division (d, r) = if r >= y then division (S d, r - y) else (d, r) in division (Z, x)
 
-  -- à¥¢à é¥­¨¥ ­ âãà «ì­ëå ç¨á¥« ¢ æ¥«ë¥
+  -- ï¿½à¥¢ï¿½é¥­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½à «ï¿½ï¿½ï¿½ ï¿½á¥« ï¿½ æ¥«ï¿½
   toInteger Z     = 0
   toInteger (S x) = 1 + toInteger x
 
@@ -177,8 +177,8 @@ size (Node _ a b) = 1 + size a + size b
 find :: (Ord a) => a -> Tree a -> Maybe a
 find _ Leaf = Nothing
 find x (Node ns a b)
-   | ns !! 0 == x  = Just x
-   | ns !! 0 > x   = find x a
+   | head ns == x  = Just x
+   | head ns > x   = find x a
    | otherwise     = find x b
 
 insert :: (Ord a) => a -> Tree a -> Tree a
@@ -202,9 +202,9 @@ remove _ Leaf = Leaf
 remove x (Node ns@(n:_) a b)
     | x < n = Node ns (remove x a) b
     | x > n = Node ns a (remove x b)
-    | (isEmpty a) && (isEmpty b) = Leaf
+    | isEmpty a && isEmpty b = Leaf
     | isEmpty b = a
-    | otherwise = Node (findMin b) a (remove (findMin b !! 0) b)
+    | otherwise = Node (findMin b) a (remove (head $ findMin b) b)
 
 findMin :: (Ord a) => Tree a -> [a]
 findMin Leaf                = error "FindMin failed"

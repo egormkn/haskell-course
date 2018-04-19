@@ -1,6 +1,5 @@
 module Hw1.Part2 where
 
--- Удалить элемент по заданному индексу и вернуть удалённый элемент
 removeAt :: Int -> [a] -> (Maybe a, [a])
 removeAt _ []   = (Nothing, [])
 removeAt n list@(x:xs)
@@ -9,17 +8,15 @@ removeAt n list@(x:xs)
          | otherwise = (fst a, x : snd a)
            where a = removeAt (n - 1) xs
 
--- Требуется реализовать сортировку слиянием
 mergeSort :: Ord a => [a] -> [a]
 mergeSort [] = []
 mergeSort [x] = [x]
-mergeSort l = let
-                  merge :: Ord t => [t] -> [t] -> [t]
+mergeSort l = let merge :: Ord t => [t] -> [t] -> [t]
                   merge a [] = a
                   merge [] b = b
                   merge a@(x:xs) b@(y:ys)
-                        = if (x <= y)
-                          then x:(merge xs b)
-                          else y:(merge a ys)
+                        = if x <= y
+                          then x : merge xs b
+                          else y : merge a ys
               in merge (mergeSort $ fst m) (mergeSort $ snd m)
                  where m = splitAt (div (length l) 2) l

@@ -15,7 +15,7 @@
 # resolver:
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
-resolver: lts-11.0
+resolver: nightly-2018-04-18
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -36,10 +36,14 @@ resolver: lts-11.0
 # non-dependency (i.e. a user package), and its test suites and benchmarks
 # will not be run. This is useful for tweaking upstream packages.
 packages:
-- .
+- hw1
+- hw2
+# hw3
 # Dependency packages to be pulled from upstream that are not in the resolver
 # (e.g., acme-missiles-0.3)
-# extra-deps: []
+extra-deps:
+- git: https://github.com/gwils/stylish-haskell.git
+  commit: 396aab08b74d0435e8fdf7b2982addf81428e74e
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
@@ -49,6 +53,7 @@ packages:
 
 # Control whether we use the GHC we find on the path
 # system-ghc: true
+
 #
 # Require a specific version of stack, using version ranges
 # require-stack-version: -any # Default

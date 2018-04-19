@@ -24,7 +24,7 @@ eval (Sub l r) = liftM2 (-) (eval l) (eval r)
 eval (Mul l r) = liftM2 (*) (eval l) (eval r)
 eval (Div n d) = eval n >>= \numValue ->
                  eval d >>= \denomValue ->
-                 if denomValue /= 0
+                 if denomValue == 0
                  then Left DivideByZero
                  else Right $ numValue `div` denomValue
 eval (Pow b d) = eval b >>= \baseValue ->
@@ -33,7 +33,9 @@ eval (Pow b d) = eval b >>= \baseValue ->
                  then Left NegativeExponent
                  else Right $ baseValue ^ degreeValue
 
+-------------------------------------------------------
+
 bin :: Int -> [[Int]]
-bin n | n < 0 = error "Negative length of sequences"
+bin n | n < 0 = error "Negative length of binary sequences"
 bin 0 = [[]]
 bin n = bin (n - 1) >>= \x -> [0 : x, 1 : x]
