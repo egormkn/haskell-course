@@ -1,4 +1,4 @@
-name:                hw1
+name:                hw2
 version:             0.1.0.0
 github:              "egormkn/haskell-course"
 license:             MIT
@@ -10,7 +10,7 @@ extra-source-files:
 - README.md
 
 # Metadata used when publishing your package
-synopsis:            Haskell ITMO course at CTD, Task 1
+synopsis:            Haskell ITMO course at CTD, Task 2
 category:            Learning Haskell
 
 # To avoid duplicated efforts in documentation and dealing with the
@@ -30,7 +30,7 @@ library:
   other-modules: []
 
 tests:
-  hw1-test:
+  hw2-test:
     main:                Spec.hs
     source-dirs:         test
     other-modules: []
@@ -39,6 +39,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - hw1
+    - hw2
     - hspec
     - hspec-discover

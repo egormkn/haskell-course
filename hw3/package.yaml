@@ -1,4 +1,4 @@
-name:                hw1
+name:                hw3
 version:             0.1.0.0
 github:              "egormkn/haskell-course"
 license:             MIT
@@ -10,7 +10,7 @@ extra-source-files:
 - README.md
 
 # Metadata used when publishing your package
-synopsis:            Haskell ITMO course at CTD, Task 1
+synopsis:            Haskell ITMO course at CTD, Task 3
 category:            Learning Haskell
 
 # To avoid duplicated efforts in documentation and dealing with the
@@ -20,17 +20,33 @@ description:         Please see the README on GitHub at <https://github.com/egor
 
 dependencies:
 - base >= 4.9 && < 5
+- containers
+- random
+- mtl
+- megaparsec
+- parser-combinators
 
 ghc-options:
 - -Wall
-- -Werror
+# - -Werror
 
 library:
   source-dirs: src
   other-modules: []
 
+executables:
+  hw3-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - hw3
+
 tests:
-  hw1-test:
+  hw3-test:
     main:                Spec.hs
     source-dirs:         test
     other-modules: []
@@ -39,6 +55,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - hw1
+    - hw3
     - hspec
     - hspec-discover
