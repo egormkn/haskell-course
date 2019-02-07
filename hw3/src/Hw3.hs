@@ -8,7 +8,7 @@ import Control.Monad.Cont
 import Text.Megaparsec.Char.Lexer as Lex
 import Text.Megaparsec as Meg
 import Text.Megaparsec.Char
-import Text.Megaparsec.Expr
+import Control.Monad.Combinators.Expr
 
 import Data.Foldable as Fold
 import Data.Void as Void
