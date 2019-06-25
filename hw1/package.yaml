@@ -20,20 +20,20 @@ description:         Please see the README on GitHub at <https://github.com/egor
 
 dependencies:
 - base >= 4.9 && < 5
+- hspec
 
 ghc-options:
 - -Wall
-- -Werror
 
 library:
   source-dirs: src
-  other-modules: []
+  ghc-options:
+  - -Werror
 
 tests:
   hw1-test:
     main:                Spec.hs
     source-dirs:         test
-    other-modules: []
     ghc-options:
     - -threaded
     - -rtsopts
